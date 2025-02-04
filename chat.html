@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シンプルチャット</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #chat-box { width: 80%; height: 300px; border: 1px solid #ccc; overflow-y: scroll; margin: 10px auto; padding: 10px; }
+        #message-input { width: 70%; padding: 5px; }
+        #send-button { padding: 5px 10px; }
+    </style>
+</head>
+<body>
 
+    <h2>シンプルチャット</h2>
+    <div id="chat-box"></div>
+
+    <input type="text" id="message-input" placeholder="メッセージを入力">
+    <button id="send-button">送信</button>
+
+    <script>
+        const chatBox = document.getElementById("chat-box");
+        const messageInput = document.getElementById("message-input");
+        const sendButton = document.getElementById("send-button");
+
+        function loadChatHistory() {
+            const messages = JSON.parse(localStorage.getItem("chat")) || [];
+            chatBox.innerHTML = messages.map(msg => `<p>${msg}</p>`).join("");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message === "") return;
+
+            const messages = JSON.parse(localStorage.getItem("chat")) || [];
+            messages.push(message);
+            localStorage.setItem("chat", JSON.stringify(messages));
+
+            messageInput.value = "";
+            loadChatHistory();
+        }
+
+        sendButton.addEventListener("click", sendMessage);
+        messageInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") sendMessage();
+        });
+
+        loadChatHistory();
+    </script>
+
+</body>
+</html>
